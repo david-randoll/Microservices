@@ -1,16 +1,5 @@
-﻿using AutoMapper;
-using MediatR;
-using Ordering.Application.Contracts.Infrastructure;
-using Ordering.Application.Contracts.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Ordering.Domain.Entities;
+﻿using Ordering.Application.Contracts.Infrastructure;
 using Ordering.Application.Models;
-using FluentValidation;
 
 namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
 {

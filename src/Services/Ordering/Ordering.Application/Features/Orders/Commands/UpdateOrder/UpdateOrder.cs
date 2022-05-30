@@ -1,10 +1,5 @@
-﻿using AutoMapper;
-using FluentValidation;
-using MediatR;
-using Microsoft.Extensions.Logging;
-using Ordering.Application.Contracts.Persistence;
-using Ordering.Application.Exceptions;
-using Ordering.Domain.Entities;
+﻿using Ordering.Application.Exceptions;
+
 
 namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
 {
