@@ -59,7 +59,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
         {
             private readonly IOrderRepository _orderRepository;
             private readonly IMapper _mapper;
-            private readonly ILogger<Handler> _logger;
+            private readonly ILogger<UpdateOrder> _logger;
 
             public Handler(IOrderRepository orderRepository, IMapper mapper, ILogger<Handler> logger)
             {
