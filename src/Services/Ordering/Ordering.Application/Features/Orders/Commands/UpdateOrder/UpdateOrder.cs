@@ -3,12 +3,8 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Contracts.Persistence;
+using Ordering.Application.Exceptions;
 using Ordering.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
 {
@@ -61,7 +57,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
             private readonly IMapper _mapper;
             private readonly ILogger<UpdateOrder> _logger;
 
-            public Handler(IOrderRepository orderRepository, IMapper mapper, ILogger<Handler> logger)
+            public Handler(IOrderRepository orderRepository, IMapper mapper, ILogger<UpdateOrder> logger)
             {
                 _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
                 _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -74,7 +70,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
                 if (orderToUpdate == null)
                 {
                     _logger.LogError("Order not exist on database");
-                    //throw new NotFoundException(nameof(Order), request.Id);
+                    throw new NotFoundException(nameof(Order), request.Id);
                 }
 
                 _mapper.Map(request, orderToUpdate, typeof(Command), typeof(Order));
