@@ -18,22 +18,25 @@ namespace Ordering.API.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpGet("{userName}", Name = nameof(GetOrdersByUserName))]
+        [HttpGet("{userName}", Name = "GetOrder")]
         [ProducesResponseType(typeof(IEnumerable<OrdersVm>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<OrdersVm>>> GetOrdersByUserName(string userName)
         {
-            return Ok(await _mediator.Send(new GetOrdersList.Query(userName)));
+            var query = new GetOrdersList.Query(userName);
+            var orders = await _mediator.Send(query);
+            return Ok(orders);
         }
 
         // testing purpose
-        [HttpPost(Name = nameof(CheckoutOrder))]
+        [HttpPost(Name = "CheckoutOrder")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult<int>> CheckoutOrder([FromBody] CheckoutOrder.Command command)
         {
-            return Ok(await _mediator.Send(command));
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
 
-        [HttpPut(Name = nameof(UpdateOrder))]
+        [HttpPut(Name = "UpdateOrder")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
@@ -43,13 +46,14 @@ namespace Ordering.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}", Name = nameof(DeleteOrder))]
+        [HttpDelete("{id}", Name = "DeleteOrder")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult> DeleteOrder(int id)
         {
-            await _mediator.Send(new DeleteOrder.Command() { Id = id });
+            var command = new DeleteOrder.Command() { Id = id };
+            await _mediator.Send(command);
             return NoContent();
         }
     }
