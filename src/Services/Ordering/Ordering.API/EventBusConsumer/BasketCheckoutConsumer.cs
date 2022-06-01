@@ -1,12 +1,27 @@
 ﻿using EventBus.Messages.Events;
+using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 
 namespace Ordering.API.EventBusConsumer
 {
     public class BasketCheckoutConsumer : IConsumer<BasketCheckoutEvent>
     {
-        public Task Consume(ConsumeContext<BasketCheckoutEvent> context)
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
+        private readonly ILogger<BasketCheckoutConsumer> _logger;
+
+        public BasketCheckoutConsumer(IMediator mediator, IMapper mapper, ILogger<BasketCheckoutConsumer> logger)
         {
-            throw new NotImplementedException();
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        public async Task Consume(ConsumeContext<BasketCheckoutEvent> context)
+        {
+            var command = _mapper.Map<CheckoutOrder.Command>(context.Message);
+            var result = await _mediator.Send(command);
+
+            _logger.LogInformation("BasketCheckoutEvent consumed successfully. Created Order Id : {newOrderId}", result);
         }
     }
 }
