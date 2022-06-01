@@ -1,8 +1,4 @@
-﻿
-
-using Ordering.Domain.Common;
-
-namespace Ordering.Infrastructure.Persistence
+﻿namespace Ordering.Infrastructure.Persistence
 {
     public class OrderContext : DbContext
     {
