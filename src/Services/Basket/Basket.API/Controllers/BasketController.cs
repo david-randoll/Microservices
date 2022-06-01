@@ -47,5 +47,23 @@ namespace Basket.API.Controllers
             await _repository.DeleteBasket(userName);
             return Ok();
         }
+
+        [HttpPost("[action]")]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        {
+            // get existing basket with total price
+            var basket = await _repository.GetBasket(basketCheckout.UserName);
+            if (basket == null) return BadRequest();
+
+            // create basketcheckoutEvent - Set TotalPrice on backetCheckout eventMessage
+
+            // send checkout event to rabbitmq
+
+            // remove the basket
+            await _repository.DeleteBasket(basket.UserName);
+            return Accepted();
+        }
     }
 }
