@@ -12,11 +12,15 @@ namespace Basket.API.Controllers
     {
         private readonly IBasketRepository _repository;
         private readonly DiscountGrpcServices _discountGrpcServices;
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IMapper _mapper;
 
-        public BasketController(IBasketRepository repository, DiscountGrpcServices discountGrpcServices)
+        public BasketController(IBasketRepository repository, DiscountGrpcServices discountGrpcServices, IPublishEndpoint publishEndpoint, IMapper mapper)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _discountGrpcServices = discountGrpcServices ?? throw new ArgumentNullException(nameof(discountGrpcServices));
+            _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet("{userName}", Name = "GetBasket")]
@@ -58,8 +62,11 @@ namespace Basket.API.Controllers
             if (basket == null) return BadRequest();
 
             // create basketcheckoutEvent - Set TotalPrice on backetCheckout eventMessage
+            var eventMessage = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
+            eventMessage.TotalPrice = basket.TotalPrice;
 
             // send checkout event to rabbitmq
+            await _publishEndpoint.Publish(eventMessage);
 
             // remove the basket
             await _repository.DeleteBasket(basket.UserName);
