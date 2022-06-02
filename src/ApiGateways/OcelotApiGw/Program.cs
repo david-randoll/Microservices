@@ -1,18 +1,23 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.ConfigureLogging((hostingContext, loggingBuilder) =>
-{
-    loggingBuilder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-    loggingBuilder.AddConsole();
-    loggingBuilder.AddDebug();
-});
+builder.Host
+    .ConfigureAppConfiguration((hostingContext, config) =>
+    {
+        config.AddJsonFile($"ocelot.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true);
+    })
+    .ConfigureLogging((hostingContext, loggingBuilder) =>
+    {
+        loggingBuilder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+        loggingBuilder.AddConsole();
+        loggingBuilder.AddDebug();
+    });
 
-builder.Services.AddOcelot();
+builder.Services.AddOcelot(builder.Configuration);
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.UseOcelot().Wait();
 
-await app.UseOcelot();
+app.MapGet("/", () => "Hello World!");
 
 app.Run();
