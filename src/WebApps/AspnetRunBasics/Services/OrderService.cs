@@ -1,6 +1,6 @@
 ﻿namespace AspnetRunBasics.Services
 {
-    public class OrderService
+    public class OrderService : IOrderService
     {
         private readonly HttpClient _client;
 

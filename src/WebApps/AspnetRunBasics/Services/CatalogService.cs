@@ -1,6 +1,6 @@
 ﻿namespace AspnetRunBasics.Services
 {
-    public class CatalogService
+    public class CatalogService : ICatalogService
     {
         private readonly HttpClient _client;
 
