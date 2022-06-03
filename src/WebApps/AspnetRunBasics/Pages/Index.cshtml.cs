@@ -24,16 +24,25 @@
             var product = await _catalogService.GetCatalog(productId);
 
             var userName = "swn";
-            var basket = await _basketService.GetBasket(productId);
+            var basket = await _basketService.GetBasket(userName);
 
-            basket.Items.Add(new BasketItemModel
+            var itemExist = basket.Items.SingleOrDefault(x => x.ProductId == productId);
+
+            if (itemExist == null)
             {
-                ProductId = productId,
-                ProductName = product.Name,
-                Price = product.Price,
-                Quantity = 1,
-                Color = "Black"
-            });
+                basket.Items.Add(new BasketItemModel
+                {
+                    ProductId = productId,
+                    ProductName = product.Name,
+                    Price = product.Price,
+                    Quantity = 1,
+                    Color = "Black"
+                });
+            }
+            else
+            {
+                basket.Items.SingleOrDefault(x => x.ProductId == productId).Quantity++;
+            }
 
             await _basketService.UpdateBasket(basket);
 
