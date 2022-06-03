@@ -7,3 +7,6 @@ global using System.Net.Http.Headers;
 global using System.Text.Json;
 global using AspnetRunBasics.Extensions;
 global using AspnetRunBasics.Services;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Mvc.RazorPages;
+global using System.Linq;
